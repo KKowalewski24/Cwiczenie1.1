@@ -1,5 +1,6 @@
 import matplotlib.pyplot as drawPlot
 import pandas
+import functions
 
 #LOADING DATA FROM FILE
 irisData = pandas.read_csv('Irys.data', header=None)
@@ -28,3 +29,30 @@ drawPlot.xlabel('petalWidth')
 drawPlot.ylabel('petalLength')
 drawPlot.legend()
 drawPlot.show()
+
+#############################################################################################################
+
+def printSeperator():
+    print('=================================================================================================')
+
+#############################################################################################################
+
+print('\nPodsumowanie Ogolne')
+print(functions.printing())
+printSeperator()
+
+print('\nPodsumowanie Iris Setosa')
+print(functions.printing())
+printSeperator()
+
+print('\nPodsumowanie Iris Versicolor')
+print(functions.printing())
+printSeperator()
+
+print('\nPodsumowanie Iris Virginica')
+print(functions.printing())
+printSeperator()
+
+
+
+
