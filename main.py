@@ -2,6 +2,15 @@ import matplotlib.pyplot as drawPlot
 import pandas
 import functions
 
+#############################################################################################################
+"""
+Pandas's Documentation
+Selecting data by row numbers - .iloc
+example: data.iloc[]
+Selecting data by label or by a conditional statment - .loc
+"""
+#############################################################################################################
+
 # LOADING DATA FROM FILE
 irisData = pandas.read_csv('Irys.data', header=None)
 
@@ -29,7 +38,6 @@ drawPlot.xlabel('Szerokosc Platka')
 drawPlot.ylabel('Dlugosc Platka')
 drawPlot.legend()
 drawPlot.show()
-
 
 
 #############################################################################################################

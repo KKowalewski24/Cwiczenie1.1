@@ -1,6 +1,7 @@
 import pandas
 from scipy import stats
 import statistics
+import numpy
 
 
 def printing(incomingData):
@@ -23,8 +24,8 @@ def printing(incomingData):
     inTotal.loc['Odchylenie standardowe'] = [i for i in incomingData.std()]
     inTotal.loc['Kurtoza'] = stats.kurtosis(incomingData.iloc[:, 0:4], fisher=False)
 
-    # inTotal.loc['Mediana'] = statistics.median(incomingData.iloc[:, 2:4])
+    inTotal.loc['Pierszy Kwartyl'] = [numpy.quantile(incomingData.iloc[:, i], .25) for i in range(4)]
+    inTotal.loc['Mediana'] = [statistics.median(incomingData.iloc[:, i]) for i in range(4)]
+    inTotal.loc['Trzeci Kwartyl'] = [numpy.quantile(incomingData.iloc[:, i], .75) for i in range(4)]
 
     return inTotal
-
-# def countQuartile(num, arr):
