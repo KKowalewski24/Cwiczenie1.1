@@ -1,36 +1,55 @@
+# /////////////////////////////////////////////////////////////////// Imports #
+from statistics import median
+
 import pandas
+from numpy import quantile
 from scipy import stats
-import statistics
-import numpy
 
 
-def printing(incomingData):
-    inTotal = pandas.DataFrame(
-        columns=['Szer Kielicha', 'Dlug Kielicha', 'Szer Platka', 'Dlug Platka'])
+# /////////////////////////////////////////////////////////// Iris statistics #
+def print_iris_statistics(data):
+    # --------------------------------------------------- Create data frame < #
+    df = pandas.DataFrame(
+            columns = ["Dł. d. k.",
+                       "Sz. d. k.",
+                       "Dł. pł.",
+                       "Sz. pł."])
 
-    inTotal.loc['Mininum'] = [i for i in incomingData.min(numeric_only=True)]
-    inTotal.loc['Maximum'] = [i for i in incomingData.max(numeric_only=True)]
-    inTotal.loc['Rozstep'] = [i for i in inTotal.loc['Maximum'] - inTotal.loc['Mininum']]
+    # ------------------------- Calculate different statistical information < #
+    df.loc["Minimum [cm]", :] = [i for i in data.iloc[:, 0:4].min()]
+    df.loc["Maksimum [cm]", :] = [i for i in data.iloc[:, 0:4].max()]
+    df.loc["Rozstęp [cm]", :] = [i for i in df.loc["Maksimum [cm]"]
+                                 - df.loc["Minimum [cm]"]]
 
-    inTotal.loc['Sred Arytm'] = [i for i in incomingData.mean()]
-    inTotal.loc['Sred Geom'] = stats.gmean(incomingData.iloc[:, 0:4])
-    inTotal.loc['Sred Harm'] = stats.hmean(incomingData.iloc[:, 0:4])
-    # operator ** means power() method
-    # The shape attribute for numpy arrays returns the dimensions of the array.
-    # If Y has n rows and m columns, then Y.shape is (n,m). So Y.shape[0] is n.
-    inTotal.loc['Sred potegowa 2 rzedu '] = [i for i in (
-            ((incomingData.iloc[:, 0:4] ** 2).sum() / incomingData.shape[0]) ** (1.0 / 2))]
-    inTotal.loc['Sred potegowa 3 rzedu '] = [i for i in (
-            ((incomingData.iloc[:, 0:4] ** 3).sum() / incomingData.shape[0]) ** (1.0 / 3))]
+    df.loc["Pierwszy kwartyl [cm]", :] = [
+        quantile(data.iloc[:, i], 0.25) for i in range(4)]
+    df.loc["Mediana [cm]", :] = [
+        median(data.iloc[:, i]) for i in range(4)]
+    df.loc["Trzeci kwartyl [cm]", :] = [
+        quantile(data.iloc[:, i], 0.75) for i in range(4)]
 
-    inTotal.loc['Wariancja'] = [i for i in incomingData.var()]
-    inTotal.loc['Odchylenie standardowe'] = [i for i in incomingData.std()]
-    # If True, Fisher’s definition is used (normal ==> 0.0).
-    # If False, Pearson’s definition is used (normal ==> 3.0).
-    inTotal.loc['Kurtoza'] = stats.kurtosis(incomingData.iloc[:, 0:4], fisher=False)
+    df.loc["Średnia harmoniczna [cm]", :] = stats.hmean(data.iloc[:, 0:4])
+    df.loc["Średnia geometryczna [cm]", :] = stats.gmean(data.iloc[:, 0:4])
+    df.loc["Średnia arytmetyczna [cm]", :] = [i for i in data.mean()]
 
-    inTotal.loc['Pierszy Kwartyl'] = [numpy.quantile(incomingData.iloc[:, i], .25) for i in range(4)]
-    inTotal.loc['Mediana'] = [statistics.median(incomingData.iloc[:, i]) for i in range(4)]
-    inTotal.loc['Trzeci Kwartyl'] = [numpy.quantile(incomingData.iloc[:, i], .75) for i in range(4)]
+    # Operator ** means power() method
+    # The shape attribute for numpy arrays returns the dimensions of the array
+    # If Y has n rows and m columns, then Y.shape is (n,m). So Y.shape[0] is n
+    df.loc["Średnia potęgowa 2 rzędu [cm]", :] = [i for i in (
+            ((data.iloc[:, 0:4] ** 2).sum() / data.shape[0]) ** (1 / 2))]
+    df.loc["Średnia potęgowa 3 rzędu [cm]", :] = [i for i in (
+            ((data.iloc[:, 0:4] ** 3).sum() / data.shape[0]) ** (1 / 3))]
 
-    return inTotal
+    df.loc["Wariancja [cm^2]", :] = [i for i in data.var()]
+    df.loc["Odchylenie standardowe [cm]", :] = [i for i in data.std()]
+
+    # If True, Fisher’s definition is used (normal ==> 0.0)
+    # If False, Pearson’s definition is used (normal ==> 3.0)
+    df.loc["Kurtoza", :] = stats.kurtosis(data.iloc[:, 0:4], fisher = False)
+
+    pandas.set_option('display.max_rows', 1000)
+    pandas.set_option('display.max_columns', 1000)
+    pandas.set_option('display.width', 1000)
+    print(df.astype(float).round(1))
+
+# /////////////////////////////////////////////////////////////////////////// #
